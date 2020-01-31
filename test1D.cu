@@ -62,7 +62,7 @@ __global__ void TransformedKernel(  int sm_low, int sm_high,
         {
             globIdx = atomicAdd(&taskIdx, 1);
             
-            logicalBlockIdx = globIdx + range;
+            logicalBlockIdx = globIdx + range;              // next index which PERSISTENT WORKER will have
         }
 
         __syncthreads();
@@ -128,8 +128,8 @@ int main(int argc, char *argv[])
     cudaMemset(d_a, 255, nbytes);
 
     int *block_index = 0;                   // 2. SM usage reporting array
-    cudaMalloc((void**)&block_index, sizeof(int) * (num_sm + 1));
-    cudaMemset(block_index, 0, sizeof(int) * (num_sm + 1 ));
+    cudaMalloc((void**)&block_index, sizeof(int) * (num_sm));
+    cudaMemset(block_index, 0, sizeof(int) * (num_sm));
 
     int *max_blocks = 0;                    // 3. to let device know number of Maximum blocks that SM can host
     cudaMalloc((void**)&max_blocks, sizeof(int));
